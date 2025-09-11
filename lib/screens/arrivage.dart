@@ -23,52 +23,36 @@ class _ArrivageState extends State<Arrivage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Arrivage'),
+        title: const Text('Arrirvage'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            DropdownButton<int>(
-              hint: Text("Selectionnez votre produit"),
-              value: selectedValue,
-              items: productList.map(
-                (product) {
-                  return DropdownMenuItem<int>(
-                    value: product["id"],
-                    child: Text(product["name"]),
-                  );
-                },
-              ).toList(),
-              onChanged: (int? value) {
-                setState(() {
-                  selectedValue = value;
-                });
-              },
-            ),
-            TextField(
-              controller: qttController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(),
-            ),
-            ElevatedButton(
-              child: const Text('Valider'),
-              onPressed: () {
-                final newQtt = int.tryParse(qttController.text);
-                final selectedProduct = productList[selectedValue! - 1];
-
-                selectedProduct["qtt"] += newQtt!;
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Quantité mise à jour pour ${selectedProduct!['name']} ajout de $newQtt pour un total de ${selectedProduct['qtt']} ",
-                        ),
-                      ),
-                    );
-              },
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          ListView.builder(
+            itemCount: productList.length,
+            itemBuilder: (context, index) {
+              final product = productList[index];
+              return ListTile(
+                title: Text(
+                  product['name'],
+                ),
+                trailing: Text(
+                  product["qtt"].toString(),
+                ),
+              );
+            },
+          ),
+          SizedBox(height: 20,),
+          DropdownButton(
+            items: productList.map((product) {
+              return DropdownMenuItem(
+                value: product['id'],
+                child: Text(product['name']),
+              );
+            },).toList(),
+            onChanged: (_) {},
+            value: selectedValue,
+          )
+        ],
       ),
     );
   }
