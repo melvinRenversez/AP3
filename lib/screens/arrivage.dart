@@ -27,31 +27,52 @@ class _ArrivageState extends State<Arrivage> {
       ),
       body: Column(
         children: [
-          ListView.builder(
-            itemCount: productList.length,
-            itemBuilder: (context, index) {
-              final product = productList[index];
-              return ListTile(
-                title: Text(
-                  product['name'],
-                ),
-                trailing: Text(
-                  product["qtt"].toString(),
-                ),
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              itemCount: productList.length,
+              itemBuilder: (context, index) {
+                final product = productList[index];
+                return ListTile(
+                  title: Text(
+                    product['name'],
+                  ),
+                  trailing: Text(
+                    product["qtt"].toString(),
+                  ),
+                );
+              },
+            ),
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           DropdownButton(
-            items: productList.map((product) {
-              return DropdownMenuItem(
-                value: product['id'],
-                child: Text(product['name']),
-              );
-            },).toList(),
-            onChanged: (_) {},
+            items: productList.map(
+              (product) {
+                return DropdownMenuItem(
+                  value: product['id'],
+                  child: Text(product['name']),
+                );
+              },
+            ).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedValue = value;
+              });
+            },
             value: selectedValue,
-          )
+          ),
+
+          TextField(
+            controller: qttController,
+          ),
+
+          ElevatedButton(
+            onPressed: () {
+              product = productList[]
+            },
+            child: Text('Ajouter'),
+          ),
         ],
       ),
     );
