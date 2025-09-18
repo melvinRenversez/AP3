@@ -8,6 +8,7 @@ class Arrivage extends StatefulWidget {
 }
 
 class _ArrivageState extends State<Arrivage> {
+
   final List<Map<String, dynamic>> productList = [
     {'id': 1, 'name': 'Product 1', 'qtt': 6},
     {'id': 2, 'name': 'Product 2', 'qtt': 5},
@@ -23,7 +24,7 @@ class _ArrivageState extends State<Arrivage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Arrirvage'),
+        title: const Text('Arrivage'),
       ),
       body: Column(
         children: [
@@ -46,33 +47,59 @@ class _ArrivageState extends State<Arrivage> {
           SizedBox(
             height: 20,
           ),
-          DropdownButton(
+          DropdownButton<int>(
+            hint: Text("Selectionnez un produit"),
+            value: selectedValue,
             items: productList.map(
               (product) {
                 return DropdownMenuItem(
-                  value: product['id'],
+                  value: product['id'] as int,
                   child: Text(product['name']),
                 );
               },
             ).toList(),
-            onChanged: (value) {
+            onChanged: (int? value) {
               setState(() {
                 selectedValue = value;
               });
             },
-            value: selectedValue,
+          ),
+            SizedBox(
+                    height: 20.toDouble(),
+                  ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+            child: TextField(
+              controller: qttController,
+            ),
           ),
 
-          TextField(
-            controller: qttController,
-          ),
+            SizedBox(
+                    height: 40.toDouble(),
+                  ),
 
           ElevatedButton(
             onPressed: () {
-              product = productList[]
+              final pr = productList
+                  .firstWhere((product) => product['id'] == selectedValue);
+              setState(() {
+                pr['qtt'] += int.parse(qttController.text);
+              });
+              qttController.clear();
+              selectedValue = null;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Update ${pr["name"]}, set qtt to ${pr["qtt"]}'),
+                  duration: Duration(seconds: 2), // Disparaît après 2 secondes
+                ),
+              );
             },
             child: Text('Ajouter'),
           ),
+            SizedBox(
+                    height: 100.toDouble(),
+                  ),
         ],
       ),
     );
